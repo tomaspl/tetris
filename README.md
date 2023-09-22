@@ -8,5 +8,10 @@ This is a initiative of creating a Tetris but without libraries, just using HTML
 
 ## Use
 
-Download the `index.html`file and open it with a normal browser to make it play.
+Placed on the project folder, execute from terminal:
+
+```bash
+npx http-server
+```
+If http-server is not installed, it will ask you for installating it. After it, will be displayed the local url to see the project working.
 
