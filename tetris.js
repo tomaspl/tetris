@@ -8,7 +8,7 @@ import { FigureZInverse } from "./figureZInverse.js";
 
 class Tetris {
     num = 0;
-    started = true;
+    started = false;
     figureGoingDown =  false;
     currentFigure = null;
     tempMatrix = [
@@ -65,6 +65,64 @@ class Tetris {
     ];
     constructor(){}
 
+    restart = () => {
+        this.tempMatrix = [
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','','']
+        ];
+        this.matrix=[
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','',''],
+            ['','','','','','','','','','']
+        ];
+        this.currentFigure = null;
+        this.started = true
+
+    }
+
     print = () => {
         for (let i = 0; i < 10; i++) {
             for(let j = 0; j<24; j++){
@@ -94,7 +152,7 @@ class Tetris {
     createFigure = () => {
         this.matrix = this.tempMatrix.map(row => [...row]);
 
-        const a = Math.floor(Math.random() * 1);
+        const a = Math.floor(Math.random() * 2);
         let figure = null;
         switch (a) {
             case 0:
@@ -139,12 +197,29 @@ class Tetris {
     }
 
     moveLeftCurrentFigure = () => {
-        this.currentFigure.moveLeft();
-
+        if(
+            this.matrix[(this.currentFigure.position[0].y)][this.currentFigure.position[0].x-1]!=='' ||
+            this.matrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x-1]!=='' ||
+            this.matrix[(this.currentFigure.position[2].y)][this.currentFigure.position[2].x-1]!=='' ||
+            this.matrix[(this.currentFigure.position[3].y)][this.currentFigure.position[3].x-1]!==''
+        ) {
+            return;
+        } else {
+            this.currentFigure.moveLeft();
+        }
     }
 
     moveRightCurrentFigure = () => {
-        this.currentFigure.moveRight();
+        if(
+            this.matrix[(this.currentFigure.position[0].y)][this.currentFigure.position[0].x+1]!=='' ||
+            this.matrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x+1]!=='' ||
+            this.matrix[(this.currentFigure.position[2].y)][this.currentFigure.position[2].x+1]!=='' ||
+            this.matrix[(this.currentFigure.position[3].y)][this.currentFigure.position[3].x+1]!==''
+        ) {
+            return;
+        } else {
+            this.currentFigure.moveRight();
+        }
 
     }
 
@@ -155,6 +230,7 @@ class Tetris {
                 if( this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x]==='' &&
                     this.tempMatrix[(this.currentFigure.position[1].y)+2][this.currentFigure.position[1].x]==='') {
                         this.currentFigure.rotate();
+                        this.updateMatrix();
                         return;
                     }
             }
@@ -164,11 +240,65 @@ class Tetris {
                     this.tempMatrix[this.currentFigure.position[1].y][this.currentFigure.position[1].x+1]==='' &&
                     this.tempMatrix[this.currentFigure.position[1].y][this.currentFigure.position[1].x+2]==='') {
                     this.currentFigure.rotate();
+                    this.updateMatrix();
                     return;
                 }
             }
 
-            this.updateMatrix();
+        }
+        if(this.currentFigure.symbol === 'r'){
+            if(this.currentFigure.position[0].y === this.currentFigure.position[1].y &&
+                this.currentFigure.position[1].y === this.currentFigure.position[2].y &&
+                this.currentFigure.position[3].y+1 === this.currentFigure.position[2].y){
+                    if(
+                        this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x]==='' &&
+                        this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x+1]===''
+                    ) {
+                        this.currentFigure.rotate();
+                        this.updateMatrix();
+                        return;
+                    }
+
+                }
+            if( this.currentFigure.position[0].x === this.currentFigure.position[1].x &&
+                this.currentFigure.position[1].x === this.currentFigure.position[2].x &&
+                this.currentFigure.position[3].x-1 === this.currentFigure.position[2].x){
+                    if(
+                        this.tempMatrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x-1]==='' &&
+                        this.tempMatrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x+1]==='' &&
+                        this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x-1]===''
+                    ) {
+                        this.currentFigure.rotate();
+                        this.updateMatrix();
+                        return;
+                    }
+            }
+
+            if( this.currentFigure.position[0].y === this.currentFigure.position[1].y &&
+                this.currentFigure.position[1].y === this.currentFigure.position[2].y &&
+                this.currentFigure.position[3].y-1 === this.currentFigure.position[2].y){
+                    if(
+                        this.tempMatrix[(this.currentFigure.position[1].y+1)][this.currentFigure.position[1].x]===''
+                    ) {
+                        this.currentFigure.rotate();
+                        this.updateMatrix();
+                        return;
+                    }
+            }
+
+            if( this.currentFigure.position[0].x === this.currentFigure.position[1].x &&
+                this.currentFigure.position[1].x === this.currentFigure.position[2].x &&
+                this.currentFigure.position[3].x+1 === this.currentFigure.position[2].x){
+                    if(
+                        this.tempMatrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x+1]==='' &&
+                        this.tempMatrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x-1]==='' 
+                    ) {
+                        this.currentFigure.rotate();
+                        this.updateMatrix();
+                        return;
+                    }
+                }
+                
         }
     }
 

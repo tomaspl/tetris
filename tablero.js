@@ -1,5 +1,6 @@
 
 const renderTablero = () => {
+    console.log('renderTablero')
     for (let j = 0; j < 24; j++) {
         const newRow = document.createElement('div');
 
@@ -14,4 +15,12 @@ const renderTablero = () => {
   }
 }
 
-export default renderTablero;
+const renderGameOver = () => {
+    const tablero = document.getElementById("tablero")
+    tablero.innerHTML = "GAME OVER"
+    const myNewButton = document.getElementById("myButton");
+    myNewButton.style.display = 'block';
+}
+
+
+export {renderTablero, renderGameOver};

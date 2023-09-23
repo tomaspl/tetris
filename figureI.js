@@ -50,6 +50,7 @@ export class FigureI extends Figure {
             this.position[3].x = this.position[3].x - 2
             this.position[3].y = this.position[3].y + 2
         } else {
+        // If it is vertical
             this.position[0].x = this.position[0].x - 1
             this.position[0].y = this.position[0].y + 1
 

@@ -1,19 +1,15 @@
-import renderTablero from "./tablero.js";
+import {renderTablero, renderGameOver} from "./tablero.js";
 import Tetris from "./tetris.js";
 
-renderTablero();
-
 const tetris = new Tetris();
-tetris.start();
-/*var e = new KeyboardEvent("keyleft", {
-    key: "Escape",
-    bubbles: true,
-    cancelable: true
-});
-document.dispatchEvent(e);
-document.addEventListener('keyleft', function(e) {
-    tetris.moveLeftCurrentFigure();
-});*/
+
+const newGame = () => {
+    const tablero = document.getElementById("tablero");
+    tablero.innerHTML = "";
+    renderTablero();
+    tetris.restart();    
+}
+
 // Add event listener on keydown
 document.addEventListener('keydown', (event) => {
     if(event.code==='ArrowLeft'){
@@ -22,23 +18,36 @@ document.addEventListener('keydown', (event) => {
     if(event.code==='ArrowRight'){
         tetris.moveRightCurrentFigure();
     }
-
     if(event.code==='Space'){
         tetris.rotateCurrentFigure();
     }
+}, false);
 
-    
-  }, false);
+
+// new game button listener
+const myNewButton = document.getElementById("myButton")
+myNewButton.addEventListener("click", function() {
+    newGame();
+    myNewButton.style.display = 'none';
+});
 
 setInterval(() => {
-    if(tetris.figureGoingDown){
-        if( tetris.currentFigure.position.some(elem => elem.y===23)||
-            tetris.currentFigure.position.some(elem => tetris.matrix[elem.y+1][elem.x]!=='')){
-            tetris.createFigure();
+    if(tetris && tetris.started){
+        if(tetris.figureGoingDown){
+            if(tetris.matrix[0].some(p => p!=='')){
+                tetris.started = false;
+                renderGameOver();
+                return;
+            }
+            if( !tetris.currentFigure ||
+                tetris.currentFigure.position.some(elem => elem.y===23)||
+                tetris.currentFigure.position.some(elem => tetris.matrix[elem.y+1][elem.x]!=='')){
+                tetris.createFigure();
+            } else {
+                tetris.avanceFigure();
+            }
         } else {
-            tetris.avanceFigure();
+            tetris.createFigure();
         }
-    } else {
-        tetris.createFigure();
     }
-}, 300)
+}, 100)

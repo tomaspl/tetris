@@ -31,5 +31,89 @@ export class FigureL extends Figure {
             }
         })
     }
-    rotate = () => {}
+    rotate = () => {
+        if(this.position.some(p => p.y === 22)){
+            return;
+        }
+        console.log('Fig L - Rotation')
+        /* If it is:
+        * |¯|¯|X|
+        * |X|X|X|
+        * |_|_|_|
+        */
+        if( this.position[0].y === this.position[1].y &&
+            this.position[1].y === this.position[2].y &&
+            this.position[3].y+1 === this.position[2].y){
+            console.log('case A - Fig L')
+            this.position[0].x = this.position[0].x + 1
+            this.position[0].y = this.position[0].y - 1
+
+            this.position[2].x = this.position[2].x - 1
+            this.position[2].y = this.position[2].y + 1
+
+            this.position[3].x = this.position[3].x
+            this.position[3].y = this.position[3].y + 2
+            return;
+        }
+
+        /* If it is:
+        * |_|X|_|
+        * |_|X|_|
+        * |_|X|X|
+        */
+        if( this.position[0].x === this.position[1].x &&
+            this.position[1].x === this.position[2].x &&
+            this.position[3].x-1 === this.position[2].x){
+            console.log('case B - Fig L')
+            this.position[0].x = this.position[0].x + 1
+            this.position[0].y = this.position[0].y + 1
+
+            this.position[2].x = this.position[2].x - 1
+            this.position[2].y = this.position[2].y - 1
+
+            this.position[3].x = this.position[3].x - 2
+            this.position[3].y = this.position[3].y
+            return;
+        }
+
+        /* If it is:
+        * |_|_|_|
+        * |X|X|X|
+        * |X|_|_|
+        */
+        if( this.position[0].y === this.position[1].y &&
+            this.position[1].y === this.position[2].y &&
+            this.position[3].y-1 === this.position[2].y){
+            console.log('case C - Fig L')
+            this.position[0].x = this.position[0].x - 1
+            this.position[0].y = this.position[0].y + 1
+
+            this.position[2].x = this.position[2].x + 1
+            this.position[2].y = this.position[2].y - 1
+
+            this.position[3].x = this.position[3].x
+            this.position[3].y = this.position[3].y - 2
+            return;
+        }
+
+        /* If it is:
+        * |X|X|_|
+        * |_|X|_|
+        * |_|X|_|
+        */
+        if( this.position[0].x === this.position[1].x &&
+            this.position[1].x === this.position[2].x &&
+            this.position[3].x+1 === this.position[2].x){
+            console.log('case D - Fig L')
+            this.position[0].x = this.position[0].x - 1
+            this.position[0].y = this.position[0].y - 1
+
+            this.position[2].x = this.position[2].x + 1
+            this.position[2].y = this.position[2].y + 1
+
+            this.position[3].x = this.position[3].x + 2
+            this.position[3].y = this.position[3].y
+            return;
+        }
+    }
 }
