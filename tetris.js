@@ -1,7 +1,10 @@
-import { Figure } from "./figure.js";
-import { FigureA } from "./figureA.js";
-import { FigureB } from "./figureB.js";
-import { FigureC } from "./figureC.js";
+import { FigureLInverse } from "./figureLInverse.js";
+import { FigureI } from "./figureI.js";
+import { FigureL } from "./figureL.js";
+import { FigureT } from "./figureT.js";
+import { FigureSquare } from "./figureSquare.js";
+import { FigureZ } from "./figureZ.js";
+import { FigureZInverse } from "./figureZInverse.js";
 
 class Tetris {
     num = 0;
@@ -60,16 +63,14 @@ class Tetris {
         ['','','','','','','','','',''],
         ['','','','','','','','','','']
     ];
-    constructor(){
-        console.log(this.matrix)
-    }
+    constructor(){}
 
     print = () => {
         for (let i = 0; i < 10; i++) {
             for(let j = 0; j<24; j++){
               const element = document.querySelector('[rowcolumn="'+j+' '+i+'"]');
-                if(this.matrix[j][i]!==''){
-                    element.className = this.matrix[j][i]+' cell';
+                if(this.tempMatrix[j][i]!==''){
+                    element.className = this.tempMatrix[j][i]+' cell';
                 } else {
                     element.className = 'cell'
                 }
@@ -78,34 +79,44 @@ class Tetris {
     }
 
     start = () => {
-        //setInterval(() => {
-            for (let i = 0; i < 10; i++) {
-                for(let j = 0; j<24; j++){
-                  const element = document.querySelector('[rowcolumn="'+j+' '+i+'"]');
-                    if(this.matrix[j][i]!==''){
-                        element.className = this.matrix[j][i]+' cell';
-                    } else {
-                        element.className = 'cell';
-                    }
+        for (let i = 0; i < 10; i++) {
+            for(let j = 0; j<24; j++){
+                const element = document.querySelector('[rowcolumn="'+j+' '+i+'"]');
+                if(this.matrix[j][i]!==''){
+                    element.className = this.matrix[j][i]+' cell';
+                } else {
+                    element.className = 'cell';
                 }
             }
-            //this.num++;
-            //this.print();
-        //}, 1000)
+        }
     }
 
     createFigure = () => {
-        const a = Math.floor(Math.random() * 3);
+        this.matrix = this.tempMatrix.map(row => [...row]);
+
+        const a = Math.floor(Math.random() * 1);
         let figure = null;
         switch (a) {
             case 0:
-                figure = new FigureA();
+                figure = new FigureI();
                 break;
             case 1:
-                figure = new FigureB();
+                figure = new FigureL();
                 break;
             case 2:
-                figure = new FigureC();
+                figure = new FigureLInverse();
+                break;
+            case 3:
+                figure = new FigureT();
+                break;
+            case 4:
+                figure = new FigureSquare();
+                break;
+            case 5:
+                figure = new FigureZ();
+                break;
+            case 6:
+                figure = new FigureZInverse();
                 break;
         }
         figure.create();
@@ -120,53 +131,47 @@ class Tetris {
     }
 
     updateMatrix = () => {
-        const emptyMatrix =  [
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','',''],
-            ['','','','','','','','','','']
-        ];
+        this.tempMatrix = this.matrix.map(row => [...row]);
         this.currentFigure.position.forEach(pos => {
-            emptyMatrix[pos.y][pos.x]=this.currentFigure.symbol;
+            this.tempMatrix[pos.y][pos.x]=this.currentFigure.symbol;
         })
-
-        this.merge(emptyMatrix)
-        
+        this.print()
     }
 
-    merge = (emptyMatrix) => {
-        for (let i = 0; i < 10; i++) {
-            for(let j = 0; j < 24; j++){
-                if(emptyMatrix[j][i]!==''){
-                    this.matrix[j][i] = emptyMatrix[j][i];
-                } else {
-                    this.matrix[j][i]='';
+    moveLeftCurrentFigure = () => {
+        this.currentFigure.moveLeft();
+
+    }
+
+    moveRightCurrentFigure = () => {
+        this.currentFigure.moveRight();
+
+    }
+
+    rotateCurrentFigure = () => {
+        if(this.currentFigure.symbol === 'v'){
+            // if it is horizontal
+            if(this.currentFigure.position.every((p) => p.y === this.currentFigure.position[0].y)){
+                if( this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x]==='' &&
+                    this.tempMatrix[(this.currentFigure.position[1].y)+2][this.currentFigure.position[1].x]==='') {
+                        this.currentFigure.rotate();
+                        return;
+                    }
+            }
+            // if it is vertical
+            if(this.currentFigure.position.every((p) => p.x === this.currentFigure.position[0].x)){
+                if( this.tempMatrix[this.currentFigure.position[1].y][this.currentFigure.position[1].x-1]==='' &&
+                    this.tempMatrix[this.currentFigure.position[1].y][this.currentFigure.position[1].x+1]==='' &&
+                    this.tempMatrix[this.currentFigure.position[1].y][this.currentFigure.position[1].x+2]==='') {
+                    this.currentFigure.rotate();
+                    return;
                 }
             }
-        }
-        this.print();
 
+            this.updateMatrix();
+        }
     }
+
 }
 
 export default Tetris;
