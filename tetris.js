@@ -7,6 +7,7 @@ import { FigureZ } from "./figureZ.js";
 import { FigureZInverse } from "./figureZInverse.js";
 
 class Tetris {
+    points = 0;
     num = 0;
     started = false;
     figureGoingDown =  false;
@@ -152,7 +153,7 @@ class Tetris {
     createFigure = () => {
         this.matrix = this.tempMatrix.map(row => [...row]);
 
-        const a = Math.floor(Math.random() * 2);
+        const a = Math.floor(Math.random() * 7);
         let figure = null;
         switch (a) {
             case 0:
@@ -188,11 +189,39 @@ class Tetris {
         this.updateMatrix();
     }
 
+    moveCurrentFigureUntilBottom = () => {
+        while (this.currentFigure &&
+            this.currentFigure.position.every(elem => elem.y < 23) &&
+            this.currentFigure.position.every(elem => this.matrix[elem.y + 1][elem.x] === '')) {
+            this.avanceFigure();
+        }
+    }
+
     updateMatrix = () => {
         this.tempMatrix = this.matrix.map(row => [...row]);
         this.currentFigure.position.forEach(pos => {
             this.tempMatrix[pos.y][pos.x]=this.currentFigure.symbol;
         })
+
+        let rowsUpdates = 0;
+
+        this.tempMatrix = this.tempMatrix.map(row => [...row]).filter(row => {
+            if(row.every(c => c!=='')){
+                rowsUpdates++;
+                return false
+            } else {
+                return true
+            }
+            
+        })
+        for(let i=0;i<rowsUpdates;i++){
+            this.tempMatrix.unshift(['','','','','','','','','',''])
+        }
+
+        const counter = document.getElementById("counter")
+        this.points = this.points + (rowsUpdates * 10);
+        counter.innerHTML = this.points
+
         this.print()
     }
 
@@ -224,84 +253,31 @@ class Tetris {
     }
 
     rotateCurrentFigure = () => {
-        if(this.currentFigure.symbol === 'v'){
-            // if it is horizontal
-            if(this.currentFigure.position.every((p) => p.y === this.currentFigure.position[0].y)){
-                if( this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x]==='' &&
-                    this.tempMatrix[(this.currentFigure.position[1].y)+2][this.currentFigure.position[1].x]==='') {
-                        this.currentFigure.rotate();
-                        this.updateMatrix();
-                        return;
-                    }
-            }
-            // if it is vertical
-            if(this.currentFigure.position.every((p) => p.x === this.currentFigure.position[0].x)){
-                if( this.tempMatrix[this.currentFigure.position[1].y][this.currentFigure.position[1].x-1]==='' &&
-                    this.tempMatrix[this.currentFigure.position[1].y][this.currentFigure.position[1].x+1]==='' &&
-                    this.tempMatrix[this.currentFigure.position[1].y][this.currentFigure.position[1].x+2]==='') {
-                    this.currentFigure.rotate();
-                    this.updateMatrix();
-                    return;
-                }
-            }
-
+        if(this.currentFigure.symbol === 'v' && this.canrotate(this.currentFigure.position[1], 2) ||
+            this.currentFigure.symbol !== 'v'&& this.canrotate(this.currentFigure.position[1], 1))
+            this.currentFigure.rotate();
+            this.updateMatrix();
         }
-        if(this.currentFigure.symbol === 'r'){
-            if(this.currentFigure.position[0].y === this.currentFigure.position[1].y &&
-                this.currentFigure.position[1].y === this.currentFigure.position[2].y &&
-                this.currentFigure.position[3].y+1 === this.currentFigure.position[2].y){
-                    if(
-                        this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x]==='' &&
-                        this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x+1]===''
-                    ) {
-                        this.currentFigure.rotate();
-                        this.updateMatrix();
-                        return;
-                    }
 
-                }
-            if( this.currentFigure.position[0].x === this.currentFigure.position[1].x &&
-                this.currentFigure.position[1].x === this.currentFigure.position[2].x &&
-                this.currentFigure.position[3].x-1 === this.currentFigure.position[2].x){
-                    if(
-                        this.tempMatrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x-1]==='' &&
-                        this.tempMatrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x+1]==='' &&
-                        this.tempMatrix[(this.currentFigure.position[1].y)+1][this.currentFigure.position[1].x-1]===''
-                    ) {
-                        this.currentFigure.rotate();
-                        this.updateMatrix();
-                        return;
-                    }
-            }
-
-            if( this.currentFigure.position[0].y === this.currentFigure.position[1].y &&
-                this.currentFigure.position[1].y === this.currentFigure.position[2].y &&
-                this.currentFigure.position[3].y-1 === this.currentFigure.position[2].y){
-                    if(
-                        this.tempMatrix[(this.currentFigure.position[1].y+1)][this.currentFigure.position[1].x]===''
-                    ) {
-                        this.currentFigure.rotate();
-                        this.updateMatrix();
-                        return;
-                    }
-            }
-
-            if( this.currentFigure.position[0].x === this.currentFigure.position[1].x &&
-                this.currentFigure.position[1].x === this.currentFigure.position[2].x &&
-                this.currentFigure.position[3].x+1 === this.currentFigure.position[2].x){
-                    if(
-                        this.tempMatrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x+1]==='' &&
-                        this.tempMatrix[(this.currentFigure.position[1].y)][this.currentFigure.position[1].x-1]==='' 
-                    ) {
-                        this.currentFigure.rotate();
-                        this.updateMatrix();
-                        return;
+    canrotate = (cell, radius) => {
+        const from = {x: cell.x - radius, y: cell.y - radius};
+        const until = {x: cell.x + radius, y: cell.y +radius};
+        let rotation = true;
+        try {
+            for(let i = from.x; i<=until.x; i++){
+                for(let j = from.y; j<=until.y; j++){
+                    if(this.matrix[j][i]!==''){
+                        rotation =  false
                     }
                 }
-                
+            }
+        } catch (e) {
+            return false
         }
+        return rotation;
     }
-
 }
+
+
 
 export default Tetris;

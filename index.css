@@ -15,9 +15,11 @@ h1 {
     height: 20px;
 }
 
-.tablero {
+#tablero {
     width: 200px;
     height: 480px;
+    margin: 0 auto;
+    display: block;
 }
 
 .v { background: green;}
@@ -27,3 +29,19 @@ h1 {
 .a { background: yellow;}
 .z { background: blue;}
 .e { background: #000;}
+
+button {
+    padding:15px;
+}
+
+#myLeft {
+    float:left;
+}
+
+#myRight {
+    float:right;
+}
+
+#myDown, #myRotate {
+    margin : 0 8%
+}

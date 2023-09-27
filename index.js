@@ -21,6 +21,9 @@ document.addEventListener('keydown', (event) => {
     if(event.code==='Space'){
         tetris.rotateCurrentFigure();
     }
+    if(event.code==='ArrowDown'){
+        tetris.moveCurrentFigureUntilBottom();
+    }
 }, false);
 
 
@@ -30,6 +33,31 @@ myNewButton.addEventListener("click", function() {
     newGame();
     myNewButton.style.display = 'none';
 });
+
+const myLeft = document.getElementById("myLeft")
+myLeft.addEventListener("click", function() {
+    tetris.moveLeftCurrentFigure();
+});
+
+const myRight = document.getElementById("myRight")
+myRight.addEventListener("click", function() {
+    tetris.moveRightCurrentFigure();
+});
+
+const myDown = document.getElementById("myDown")
+myDown.addEventListener("click", function() {
+    tetris.moveCurrentFigureUntilBottom();
+});
+
+const myRotate = document.getElementById("myRotate")
+myRotate.addEventListener("click", function() {
+    tetris.rotateCurrentFigure();
+});
+
+
+
+
+
 
 setInterval(() => {
     if(tetris && tetris.started){
@@ -50,4 +78,4 @@ setInterval(() => {
             tetris.createFigure();
         }
     }
-}, 100)
+}, 400)

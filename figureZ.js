@@ -31,5 +31,39 @@ export class FigureZ extends Figure {
             }
         })
     }
-    rotate = () => {}
+    rotate = () => {
+        if(this.position.some(p => p.y === 22)){
+            return;
+        }
+        console.log('Fig Z - Rotation')
+        /* If it is:
+        * |¯|¯|¯|
+        * |X|X|_|
+        * |_|X|X|
+        */
+        if( this.position[0].x + 2 === this.position[3].x){
+            console.log('case A - Fig Z')
+            this.position[0].x = this.position[0].x + 1
+            this.position[0].y = this.position[0].y - 1
+
+            this.position[2].x = this.position[2].x - 1
+            this.position[2].y = this.position[2].y - 1
+
+            this.position[3].x = this.position[3].x - 2
+            return;
+        } else {
+        /* If it is:
+        * |¯|X|¯|
+        * |X|X|_|
+        * |X|_|_|
+        */
+            this.position[0].x = this.position[0].x - 1
+            this.position[0].y = this.position[0].y + 1
+
+            this.position[2].x = this.position[2].x + 1
+            this.position[2].y = this.position[2].y + 1
+
+            this.position[3].x = this.position[3].x + 2
+        }
+    }
 }
