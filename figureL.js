@@ -1,4 +1,5 @@
 import { Figure } from "./figure.js";
+import { BOARD_HEIGHT, BOARD_WIDTH } from './constants.js'
 
 export class FigureL extends Figure {
     symbol = 'r'
@@ -19,17 +20,17 @@ export class FigureL extends Figure {
         })
     }
     moveRight = () => {
-        if (this.position.some(p => p.x === 9)) {
+        if (this.position.some(p => p.x === BOARD_WIDTH - 1)) {
             return;
         }
         this.position.forEach(pos => {
-            if (pos.x < 9) {
+            if (pos.x < BOARD_WIDTH - 1) {
                 pos.x = pos.x + 1;
             }
         })
     }
     rotate = () => {
-        if (this.position.some(p => p.y === 22)) {
+        if (this.position.some(p => p.y === BOARD_HEIGHT - 2)) {
             return;
         }
         /* If it is:

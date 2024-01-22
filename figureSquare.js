@@ -19,11 +19,11 @@ export class FigureSquare extends Figure {
         })
     }
     moveRight = () => {
-        if (this.position.some(p => p.x === 9)) {
+        if (this.position.some(p => p.x === BOARD_WIDTH - 1)) {
             return;
         }
         this.position.forEach(pos => {
-            if (pos.x < 9) {
+            if (pos.x < BOARD_WIDTH - 1) {
                 pos.x = pos.x + 1;
             }
         })

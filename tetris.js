@@ -5,6 +5,7 @@ import { FigureT } from "./figureT.js";
 import { FigureSquare } from "./figureSquare.js";
 import { FigureZ } from "./figureZ.js";
 import { FigureZInverse } from "./figureZInverse.js";
+import { BOARD_HEIGHT, BOARD_WIDTH, POINTS_PER_LINE } from './constants.js'
 
 class Tetris {
     points = 0;
@@ -12,134 +13,34 @@ class Tetris {
     started = false;
     figureGoingDown = false;
     currentFigure = null;
-    tempMatrix = [
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', '']
-    ];
-    matrix = [
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', '', '', '']
-    ];
+    tempMatrix = Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(''));
+    matrix = Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(''));
     constructor() { }
 
     restart = () => {
-        this.tempMatrix = [
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', '']
-        ];
-        this.matrix = [
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', '', '', '']
-        ];
+        this.tempMatrix = Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(''));
+        this.matrix = Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(''));
         this.currentFigure = null;
-        this.started = true
-
+        this.started = true;
+        this.points = 0;
     }
 
     print = () => {
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 24; j++) {
+        for (let i = 0; i < BOARD_WIDTH; i++) {
+            for (let j = 0; j < BOARD_HEIGHT; j++) {
                 const element = document.querySelector('[rowcolumn="' + j + ' ' + i + '"]');
                 if (this.tempMatrix[j][i] !== '') {
                     element.className = this.tempMatrix[j][i] + ' cell';
                 } else {
-                    element.className = 'cell'
+                    element.className = 'cell';
                 }
             }
         }
     }
 
     start = () => {
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 24; j++) {
+        for (let i = 0; i < BOARD_WIDTH; i++) {
+            for (let j = 0; j < BOARD_HEIGHT; j++) {
                 const element = document.querySelector('[rowcolumn="' + j + ' ' + i + '"]');
                 if (this.matrix[j][i] !== '') {
                     element.className = this.matrix[j][i] + ' cell';
@@ -179,20 +80,20 @@ class Tetris {
                 break;
         }
         this.currentFigure = figure;
-        this.updateMatrix()
+        this.updateMatrix();
         this.figureGoingDown = true;
     }
 
-    avanceFigure = () => {
+    progressFigure = () => {
         this.currentFigure.avance();
         this.updateMatrix();
     }
 
     moveCurrentFigureUntilBottom = () => {
         while (this.currentFigure &&
-            this.currentFigure.position.every(elem => elem.y < 23) &&
+            this.currentFigure.position.every(elem => elem.y < BOARD_HEIGHT - 1) &&
             this.currentFigure.position.every(elem => this.matrix[elem.y + 1][elem.x] === '')) {
-            this.avanceFigure();
+            this.progressFigure();
         }
     }
 
@@ -218,7 +119,7 @@ class Tetris {
         }
 
         const counter = document.getElementById("counter")
-        this.points = this.points + (rowsUpdates * 10);
+        this.points = this.points + (rowsUpdates * POINTS_PER_LINE);
         counter.innerHTML = this.points
 
         this.print()
@@ -252,13 +153,13 @@ class Tetris {
     }
 
     rotateCurrentFigure = () => {
-        if (this.currentFigure.symbol === 'v' && this.canrotate(this.currentFigure.position[1], 2) ||
-            this.currentFigure.symbol !== 'v' && this.canrotate(this.currentFigure.position[1], 1))
+        if (this.currentFigure.symbol === 'v' && this.canRotate(this.currentFigure.position[1], 2) ||
+            this.currentFigure.symbol !== 'v' && this.canRotate(this.currentFigure.position[1], 1))
             this.currentFigure.rotate();
         this.updateMatrix();
     }
 
-    canrotate = (cell, radius) => {
+    canRotate = (cell, radius) => {
         const from = { x: cell.x - radius, y: cell.y - radius };
         const until = { x: cell.x + radius, y: cell.y + radius };
         let rotation = true;

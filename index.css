@@ -1,11 +1,12 @@
 h1 {
-    color:red
+    color: red;
+    text-align: center;
 }
 
 .cell {
     width: 20px;
     height: 20px;
-    float:left;
+    float: left;
     outline: 1px solid grey;
     background: #fff;
 }
@@ -15,33 +16,51 @@ h1 {
     height: 20px;
 }
 
-#tablero {
+#board {
     width: 200px;
     height: 480px;
     margin: 0 auto;
     display: block;
+    text-align: center;
 }
 
-.v { background: green;}
-.r { background: red;}
-.n { background: rgb(216, 140, 0);}
-.p { background: rgb(252, 91, 117);}
-.a { background: yellow;}
-.z { background: blue;}
-.e { background: #000;}
+.pointsWrapper {
+    margin: 0 auto;
+    display: block;
+    width: fit-content;
+    text-align: center;
+}
+
+.v {
+    background: green;
+}
+
+.r {
+    background: red;
+}
+
+.n {
+    background: rgb(216, 140, 0);
+}
+
+.p {
+    background: rgb(252, 91, 117);
+}
+
+.a {
+    background: yellow;
+}
+
+.z {
+    background: blue;
+}
+
+.e {
+    background: #000;
+}
 
 button {
-    padding:15px;
-}
-
-#myLeft {
-    float:left;
-}
-
-#myRight {
-    float:right;
-}
-
-#myDown, #myRotate {
-    margin : 0 8%
+    padding: 15px;
+    margin: 0 auto;
+    display: block;
 }
