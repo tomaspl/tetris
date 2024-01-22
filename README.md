@@ -31,7 +31,7 @@ To see and play the current implementation of this Tetris go to https://tomaspl.
 6. This Tetris game will not increase the speed as the game progresses.
 7. If there is not enough space, and the last figure is stacked at the very top of the board, touching the top edge, the game is over. It will display the points and allow the player to start a new game.
 
-## Summary of how it was implemented
+## Short summary of how it was implemented
 It created an internal matrix structure. In each cell, there could be a 'r,' 'v,' 'n,' 'a,' 'p,' 'z,' or 'e' character. Each character represents a different Tetris figure.
 i.e:
 
