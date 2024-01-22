@@ -35,15 +35,16 @@ To see and play the current implementation of this Tetris go to https://tomaspl.
 It created an internal matrix structure. In each cell, there could be a 'r,' 'v,' 'n,' 'a,' 'p,' 'z,' or 'e' character. Each character represents a different Tetris figure.
 i.e:
 
-    ```
+    
     [
+        ...
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', 'r', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', 'r', 'r', 'r', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         ...
     ]
-    ```
+    
 
 Will be the L figure.
     
